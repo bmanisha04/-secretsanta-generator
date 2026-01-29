@@ -10,7 +10,7 @@ pipeline {
         stage ('Build') {
 
             steps{
-                sh 'docker build -t secretsanta:latest .'
+                sh 'sudo docker build -t secretsanta:latest .'
             }
         }
     }
