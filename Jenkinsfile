@@ -10,6 +10,7 @@ pipeline {
         stage ('Build') {
 
             steps{
+                sh 'mvn clean package -DskipTests'
                 sh 'sudo docker build -t secretsanta:latest .'
             }
         }
