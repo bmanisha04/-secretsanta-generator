@@ -6,5 +6,12 @@ pipeline {
                 checkout scm
             }
         }
+
+        stage ('Build') {
+
+            steps{
+                sh 'docker build -t secretsanta:latest .'
+            }
+        }
     }
 }

@@ -1,11 +1,15 @@
-FROM openjdk:8u151-jdk-alpine3.7
-  
-EXPOSE 8080
+#---------------------------------------Build stage---------------------------------------
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+WORKDIR /app
+copy pom.xml .
+COPY src ./src
+RUN mvn clean packge -DskipTests
+
+#---------------------------------------Run stage---------------------------------------
+
  
-ENV APP_HOME /usr/src/app
-
-COPY target/secretsanta-0.0.1-SNAPSHOT.jar $APP_HOME/app.jar
-
-WORKDIR $APP_HOME
-
-ENTRYPOINT exec java -jar app.jar 
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=Build /app/target/*jar app.jar 
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
