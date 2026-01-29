@@ -1,36 +1,38 @@
 apiVersion: apps/v1
-kind: Deployment # Kubernetes resource kind we are creating
+kind: Deployment
 metadata:
-  name: santa-deployment
+  name: deployment-santa
+  labels:
+    app: santa-app
+
 spec:
+  replicas: 2
   selector:
     matchLabels:
-      app: santa
-  replicas: 2 # Number of replicas that will be created for this deployment
+      app: santa-app
+
   template:
     metadata:
       labels:
-        app: santa
+        app: santa-app
     spec:
       containers:
-        - name: santa
-          image: adijaiswal/santa:latest # Image that will be used to containers in the cluster
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080 # The port that the container is running on in the cluster
-
+      - name: santa-container
+        image: devopsproject1.azurecr.io/secretsanta:latest
+        ports:
+        - containerPort: 8080
 
 ---
 
-apiVersion: v1 # Kubernetes API version
-kind: Service # Kubernetes resource kind we are creating
-metadata: # Metadata of the resource kind we are creating
-  name: santa-ssvc
+apiVersion: v1
+kind: Service
+metadata:
+  name: servicesanta
+
 spec:
+  type: LoadBalancer
   selector:
-    app: santa
+    app: santa-app
   ports:
-    - protocol: "TCP"
-      port: 8080 # The port that the service is running on in the cluster
-      targetPort: 8080 # The port exposed by the service
-  type: LoadBalancer # type of the service.
+  - port: 80
+    targetPort: 8080
